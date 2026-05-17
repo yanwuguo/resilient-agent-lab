@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resilient Agent Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar" aria-label="workspace status">
+        <div>
+          <p class="eyebrow">TrueFoundry resilient agents track</p>
+          <h1>Resilient Agent Lab</h1>
+        </div>
+        <div class="status-strip">
+          <span class="pulse"></span>
+          <span id="runtime-status">Ready</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <aside class="panel control-panel" aria-label="simulation controls">
+          <div class="panel-heading">
+            <h2>Scenario</h2>
+            <button id="reset" class="icon-button" title="Reset scenario" aria-label="Reset scenario">
+              <span aria-hidden="true">Reset</span>
+            </button>
+          </div>
+
+          <label class="field">
+            <span>Agent task</span>
+            <textarea id="task" rows="5">Investigate why checkout sentiment dropped this morning, summarize the likely cause, and open a follow-up ticket if confidence is high.</textarea>
+          </label>
+
+          <div class="field">
+            <span>Routing policy</span>
+            <div class="segmented" role="radiogroup" aria-label="routing policy">
+              <label>
+                <input type="radio" name="policy" value="balanced" checked />
+                <span>Balanced</span>
+              </label>
+              <label>
+                <input type="radio" name="policy" value="fast" />
+                <span>Fast</span>
+              </label>
+              <label>
+                <input type="radio" name="policy" value="strict" />
+                <span>Strict</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field inline-range">
+            <span>Timeout budget</span>
+            <output id="timeout-value">6s</output>
+            <input id="timeout" type="range" min="2" max="12" value="6" />
+          </div>
+
+          <div class="field">
+            <span>Failure injection</span>
+            <div class="toggles">
+              <label><input id="fail-primary" type="checkbox" checked /> Primary LLM outage</label>
+              <label><input id="fail-mcp" type="checkbox" checked /> MCP search timeout</label>
+              <label><input id="fail-ticket" type="checkbox" /> Ticket API brownout</label>
+              <label><input id="fail-json" type="checkbox" /> Malformed model output</label>
+            </div>
+          </div>
+
+          <button id="run" class="primary">Run resilience drill</button>
+        </aside>
+
+        <section class="panel agent-panel" aria-label="agent execution">
+          <div class="panel-heading">
+            <h2>Execution</h2>
+            <div class="mini-metrics">
+              <span><strong id="score">0</strong> score</span>
+              <span><strong id="latency">0.0s</strong> latency</span>
+              <span><strong id="degraded">0</strong> degraded</span>
+            </div>
+          </div>
+
+          <div class="provider-row" aria-label="providers">
+            <article class="provider" data-provider="openai">
+              <span>OpenAI primary</span>
+              <strong id="openai-state">standby</strong>
+            </article>
+            <article class="provider" data-provider="claude">
+              <span>Claude fallback</span>
+              <strong id="claude-state">standby</strong>
+            </article>
+            <article class="provider" data-provider="local">
+              <span>Local small model</span>
+              <strong id="local-state">standby</strong>
+            </article>
+          </div>
+
+          <div class="timeline-shell">
+            <ol id="timeline" class="timeline"></ol>
+          </div>
+        </section>
+
+        <section class="panel response-panel" aria-label="agent response">
+          <div class="panel-heading">
+            <h2>User response</h2>
+            <span id="confidence" class="confidence">waiting</span>
+          </div>
+          <article id="answer" class="answer empty">Run a drill to generate the customer-facing response.</article>
+          <div class="action-row">
+            <article>
+              <span>Ticket</span>
+              <strong id="ticket-state">not started</strong>
+            </article>
+            <article>
+              <span>Cache</span>
+              <strong id="cache-state">fresh</strong>
+            </article>
+            <article>
+              <span>Audit</span>
+              <strong id="audit-state">idle</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel details-panel" aria-label="resilience controls">
+          <div class="panel-heading">
+            <h2>Guardrails</h2>
+            <span id="breaker-summary">3 closed</span>
+          </div>
+          <div class="breaker-grid">
+            <article class="breaker">
+              <span>LLM circuit</span>
+              <strong id="llm-breaker">closed</strong>
+            </article>
+            <article class="breaker">
+              <span>MCP circuit</span>
+              <strong id="mcp-breaker">closed</strong>
+            </article>
+            <article class="breaker">
+              <span>Write circuit</span>
+              <strong id="write-breaker">closed</strong>
+            </article>
+          </div>
+          <div class="runbook">
+            <h3>Runbook</h3>
+            <ul id="runbook"></ul>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
