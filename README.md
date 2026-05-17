@@ -4,6 +4,8 @@ Submission-ready project for the DevNetwork AI/ML Hackathon 2026, TrueFoundry "R
 
 Resilient Agent Lab is a browser-based chaos drill for AI agents. It shows how an agent keeps a usable customer experience when the primary LLM fails, an MCP server times out, a write API browns out, or a model returns malformed JSON.
 
+Repository: https://github.com/yanwuguo/resilient-agent-lab
+
 ## Why it fits the challenge
 
 The TrueFoundry prompt asks: "How does your agent behave when an MCP server starts erroring out? An LLM server goes down? OpenAI or Claude errors out or browns out?"
@@ -53,3 +55,5 @@ TrueFoundry asks for resilient agents when MCP servers and LLM servers fail. Thi
 ## Status
 
 Built as a lightweight, no-key prototype for hackathon submission. A production version would replace the simulated providers with real LiteLLM/OpenAI/Anthropic adapters, a real MCP client, persistent audit storage, and deployment health probes.
+
+GitHub Pages build succeeded, but this GitHub account currently redirects Pages projects to `posts.yanwu.me`; that domain resolves to an expired/unreachable host. Fixing the account-level Pages domain or deploying through another host will make the live demo URL usable.
